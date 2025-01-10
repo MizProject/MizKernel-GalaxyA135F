@@ -1372,7 +1372,7 @@ static int init_dm(struct exynos_cpufreq_domain *domain,
 
 
 
-/*physwizz underclocking*/
+/*MizProject underclocking*/
 /*Underclocking little cores to 130MHz*/
 static unsigned long arg_cpu_min_c1 = 130000; 
 static int __init cpufreq_read_cpu_min_c1(char *cpu_min_c1) /*integer remains in memory after function call*/
