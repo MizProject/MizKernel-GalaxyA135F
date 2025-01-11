@@ -2,7 +2,6 @@
 # REMEMBER TO DEPRECATE ON APRIL 2025; REFER TO GITPOD TRANSFER TO GITPOD FLEX
 
 
-image: ubuntu:22.04
 
 tasks:
   - name: 'Preparing Additional ENV'
