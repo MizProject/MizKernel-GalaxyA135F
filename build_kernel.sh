@@ -12,8 +12,8 @@ build() {
     export PLATFORM_VERSION=13
     export ARCH=arm64
     
-    make ARCH=arm64 mizkernel-a13xx_defconfig -j64
-    make ARCH=arm64 -j64
+    make -C $(pwd) O=$(pwd)/out ARCH=arm64 mizkernel-a13xx_defconfig -j64
+    make -C $(pwd) O=$(pwd)/out ARCH=arm64 -j64
 }
 
 START_BUILD_TIME_RAW=$(TZ="Asia/Manila" date +%T)
