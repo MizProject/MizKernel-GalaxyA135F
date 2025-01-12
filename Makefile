@@ -388,7 +388,8 @@ READELF		= llvm-readelf
 OBJSIZE		= llvm-size
 STRIP		= llvm-strip
 else
-CC		= $(srctree)/toolchains/clang-r383902/bin/clang
+# CC		= $(srctree)/toolchains/clang-r383902/bin/clang
+CC		= $(srctree)/toolchains/clang-r416183b/bin/clang
 #CC    = ../PLATFORM/prebuilts/clang/host/linux-x86/clang-r383902/bin/clang
 LD		= $(CROSS_COMPILE)ld
 AR		= $(CROSS_COMPILE)ar
