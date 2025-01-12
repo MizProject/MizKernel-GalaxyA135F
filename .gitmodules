@@ -4,3 +4,6 @@
 [submodule "toolchains/aarch64-android-4.9-llvm"]
 	path = toolchains/aarch64-android-4.9-llvm
 	url = https://github.com/Mizumo-prjkt/aarch64-linux-android-4.9-llvm
+[submodule "toolchains/clang-r416183b"]
+	path = toolchains/clang-r416183b
+	url = https://gitlab.com/Mizumo-prjkt/clang-r416183b.git
