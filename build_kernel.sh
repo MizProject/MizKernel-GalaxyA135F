@@ -1,8 +1,12 @@
 #!/bin/bash
 
 export KBUILD_BUILD_USER="Mizumo_prjkt"
+export KBUILD_BUILD_HOST="MizProject_Organization"
+# Use LLVM
+export LLVM=1
 
 # Summon some toolchains
+
 
 git-init_() {
     git submodule init && git submodule update
