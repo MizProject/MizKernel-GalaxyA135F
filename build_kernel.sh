@@ -51,6 +51,7 @@ else
 fi
 
 # ccache
+export CCACHE_DIR=~/.ccache
 case "$4" in
     "CC=10G")
         export CC="ccache $(srctree)/toolchains/clang-r416183b/bin/clang"
