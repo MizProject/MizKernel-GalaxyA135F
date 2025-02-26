@@ -9,4 +9,4 @@
 	url = https://gitlab.com/Mizumo-prjkt/clang-r416183b.git
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/rsuntk/KernelSU
+	url = https://github.com/rsuntk/KernelSUonArm32
