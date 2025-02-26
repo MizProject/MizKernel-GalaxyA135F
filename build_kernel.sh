@@ -1,34 +1,141 @@
 #!/bin/bash
 
-export KBUILD_BUILD_USER="Mizumo_prjkt"
 
-# Summon some toolchains and files
+# export PLATFORM_VERSION=13
+# export ANDROID_MAJOR_VERSION=t
+# export ARCH=arm64
 
+# make clean && make mrproper
+# make ARCH=arm64 mizkernel-a12snsxx_defconfig
+# make ARCH=arm64 -j64
+
+
+# Help
+
+if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then 
+    echo "MizKernel Builderscript"
+    echo "./build_kernel.sh  [-h/--lto] [lld] [gitsm] [ccache]"
+    echo ""
+    echo "Args:"
+    echo "Help       -h/--help"
+    echo "LTO"
+    echo "   FULL    --lto=full"
+    echo "   THIN    --lto=thin"
+    echo "   NONE    --lto=null"
+    echo "LLD"
+    echo "   LLD ON  --lld=on"
+    echo "   LLD OFF --lld=off"
+    echo "Not arg with LLD, disables LLD by default"
+    echo "Git Submodule fetch"
+    echo "   Git submodule on  --gs=on"
+    echo "   Git submodule off --gs=off"
+    echo ""
+    echo "CCACHE"
+    echo "  CC=10G      Use CCACHE with 10G"
+    echo "  CC=50G      Use CCACHE with 50G"
+    echo "  CC=null     Disable CCACHE"
+    exit 1
+fi
+
+
+# Check if theres no arg
+
+
+if [ -z "$1" ]; then
+    echo "No args was passed"
+    echo "See: ./build_kernel.sh -h"
+    echo "Starting in 10sec"
+    sleep 10
+else
+    echo "Args: $@"
+fi
+
+# ccache
+case "$4" in
+    "CC=10G")
+        export CC="ccache $(srctree)/toolchains/clang-r416183b/bin/clang"
+        export LD="ccache $(CROSS_COMPILE)ld"
+        ccache -M 10G
+        echo "CCache Enabled, calibrated to 10G"
+        ;;
+    "CC=50G")
+        export CC="ccache $(srctree)/toolchains/clang-r416183b/bin/clang"
+        export LD="ccache $(CROSS_COMPILE)ld"
+        ccache -M 50G
+        echo "CCache Enabled, calibrated to 50G"
+        ;;
+    "CC=null")
+        echo "CCache Disabled"
+        ;;
+esac
+
+
+# Note:
+
+
+export KBUILD_BUILD_USER="@Mizumo_prjkt"
+export KBUILD_BUILD_HOST="MizProject (MIZPRJKT)"
+export LLVM=1
+
+wipe_old_conf() {
+    rm -rf .config
+    rm -rf .config.old
+}
+
+# Summon KSU and some toolchains
+
+if [ "$3" == "--gs=on" ]; then
 git-init_() {
     git submodule init && git submodule update
 }
+else
+    echo "Submodule init and update off"
+fi
 
 build() {
     export PLATFORM_VERSION=13
+    export ANDROID_MAJOR_VERSION=t
     export ARCH=arm64
-    
-    make  ARCH=arm64 mizkernel-a13xx_defconfig -j64
-    make  ARCH=arm64 -j64
-}
 
-set_tz() {
-    sudo rm -rf /etc/localtime
-    sudo ln -sf /usr/share/zoneinfo/Asia/Manila /etc/localtime
+    # Additional Features
+    # xxARG is fallback because for some reason it doesnt acknowledge the fact that it needs LTO or LLD or not
+    if [ "$1" == "--lto=full" ]; then
+        export LTO=full
+        LTOARG="LTO=full"
+    elif [ "$1" == "--lto=thin" ]; then
+        export LTO=thin
+        LTOARG="LTO=thin"
+    elif [ "$1" == "--lto=null" ]; then
+        echo "NLTO"
+        LTOARG=" "
+    fi
+
+
+    if [ "$2" == "--lld=on" ]; then
+        export LD="ld.lld"
+        LDARG="LD=ld.lld"
+    elif [ "$2" == "--lld=off" ]; then
+        LDARG=" "
+    else 
+        LDARG=" "
+    fi
+
+    
+    make clean && make mrproper
+    make -j$(nproc --all) KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y ARCH=arm64 mizkernel-a13xx_defconfig $LTOARG $LDARG
+    make -j$(nproc --all) KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y ARCH=arm64 
 }
 
 START_BUILD_TIME_RAW=$(TZ="Asia/Manila" date +%T)
 START_BUILD_DATE_RAW=$(TZ="Asia/Manila" date +%F)
 START_BUILD_TIME_AND_DATE="$START_BUILD_TIME_RAW - $START_BUILD_DATE_RAW"
-echo "Starting Compile of A13 Kernel"
+echo "Starting Compile of A12s Kernel"
 echo "Start Build: $START_BUILD_TIME_AND_DATE"
 
+wipe_old_conf
+if [ "$3" == "--gs=on" ]; then
 git-init_
-set_tz
+fi
 build
 
 echo "Build Ended :D"
