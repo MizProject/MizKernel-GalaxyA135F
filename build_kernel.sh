@@ -2,7 +2,7 @@
 
 export KBUILD_BUILD_USER="Mizumo_prjkt"
 export KBUILD_BUILD_HOST="MizProject_Organization"
-# Use LLVM
+# LLVM is broken for some reason?
 export LLVM=1
 
 # Summon some toolchains
